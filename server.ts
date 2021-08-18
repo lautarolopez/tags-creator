@@ -1,5 +1,7 @@
 import { Application, Router, Context } from "https://deno.land/x/oak/mod.ts"
 import "https://deno.land/x/dotenv/load.ts";
+import { parse } from "https://deno.land/std/flags/mod.ts";
+
 
 
 const router = new Router();
@@ -203,4 +205,8 @@ router
 app.use(router.routes());
 app.use(router.allowedMethods());
 console.log("Listening")
-await app.listen({ port: 8000 ?? parseInt(Deno.env.get('PORT')) });
+
+const { args } = Deno;
+const DEFAULT_PORT = 8000;
+const argPort = parse(args).port;
+await app.listen({ port: argPort ? Number(argPort) : DEFAULT_PORT });
