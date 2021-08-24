@@ -166,6 +166,44 @@ const getBugCardsVerbose = async (ctx: Context) => {
     }
 }
 
+const getVbCards = async (ctx: Context) => {
+    const allCards = await fetchDoneList();
+    const vbCards = allCards.filter((card: any) => {
+        let isVb = false;
+        card.labels.forEach((label: any) => {
+            if (label.name === "VB") isVb = true;
+        })
+        return isVb;
+    });
+    const cardsInMDX = vbCards.map((card: any) => `[ [TRE-${card.idShort}] ](${card.shortUrl})`)
+    if (cardsInMDX.length === 0) { 
+        ctx.response.body = {
+            message: "No hay tarjetas :c"
+        }
+    } else {
+        ctx.response.body = cardsInMDX.join(", ");
+    }
+}
+
+const getVbCardsVerbose = async (ctx: Context) => {
+    const allCards = await fetchDoneList();
+    const vbCards = allCards.filter((card: any) => {
+        let isVb = false;
+        card.labels.forEach((label: any) => {
+            if (label.name === "VB") isVb = true;
+        })
+        return isVb;
+    });
+    const cardsInMDX = vbCards.map((card: any) => `[TRE-${card.idShort}] | ${card.name}`)
+    if (cardsInMDX.length === 0) { 
+        ctx.response.body = {
+            message: "No hay tarjetas :c"
+        }
+    } else {
+        ctx.response.body = cardsInMDX.join("\n");
+    }
+}
+
 const getAll = async (ctx: Context) => {
     const allCards = await fetchDoneList();
     const cardsInMDX = allCards.map((card: any) => `[ [TRE-${card.idShort}] ](${card.shortUrl})`)
@@ -195,10 +233,12 @@ router
     .get("/backoffice", getBackofficeCards)
     .get("/frontend", getFrontendCards)
     .get("/backend", getBackendCards)
+    .get("/vb", getVbCards)
     .get("/all/verbose", getAllVerbose)
     .get("/backoffice/verbose", getBackofficeCardsVerbose)
     .get("/frontend/verbose", getFrontendCardsVerbose)
     .get("/backend/verbose", getBackendCardsVerbose)
+    .get("/vb/verbose", getVbCardsVerbose)
     .get("/bug", getBugCards)
     .get("/bug/verbose", getBugCardsVerbose);
 
