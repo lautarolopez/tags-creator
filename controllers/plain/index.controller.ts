@@ -1,5 +1,5 @@
 import { getCardsFromList, getCardsFromListWithTag } from "../../utils/trelloApiUtils.ts";
-import { mapCardsToLinks, mapCardsToNames } from "../../utils/mappers.ts";
+import { mapCardsToLinks, mapCardsToNames, cardsToHTML } from "../../utils/mappers.ts";
 
 
 export const getAllLinks = async (ctx: any) => {
@@ -11,7 +11,7 @@ export const getAllLinks = async (ctx: any) => {
 export const getLinksByTag = async (ctx: any) => {
     const { list_name, tag_name } = ctx.params;
     const cards = await getCardsFromListWithTag(list_name, tag_name)
-    if (cards.length > 0) return ctx.response.body = mapCardsToLinks(cards);
+    if (cards.length > 0) return ctx.response.body = cardsToHTML(cards);
     return ctx.response.body = "No hay tarjetas :C"
 }
 export const getAllNames = async (ctx: any) => {
